@@ -1,0 +1,66 @@
+schema: '2.0'
+stages:
+  build_features:
+    cmd: python ./src/features/build_features.py /data/raw/tips.csv
+    deps:
+    - path: ./data/raw/tips.csv
+      hash: md5
+      md5: b8e189917e1e12e5e34247f90db7834f
+      size: 7943
+    - path: ./src/features/build_features.py
+      hash: md5
+      md5: 2b8ae703e35e2d2e2c4709a02a9973d8
+      size: 2168
+  make_dataset:
+    cmd: python ./src/data/make_dataset.py /data/interim/tips2.csv
+    deps:
+    - path: ./data/interim/
+      hash: md5
+      md5: 66dbaf7a5870f9a3065fcde9c3a9be66.dir
+      size: 8676
+      nfiles: 1
+    - path: ./src/data/make_dataset.py
+      hash: md5
+      md5: 7fe22db05173143892132f1549c81960
+      size: 1545
+    params:
+      params.yaml:
+        make_dataset.seed: 2023
+        make_dataset.test_split: 0.2
+  train_model:
+    cmd: python ./src/models/train_model.py /data/processed/
+    deps:
+    - path: ./data/processed/
+      hash: md5
+      md5: aab50a4dee3a7adb53cfbd30ed96d17a.dir
+      size: 11560
+      nfiles: 3
+    - path: ./src/models/train_model.py
+      hash: md5
+      md5: 1714e10767d222a05944cf792d089243
+      size: 3060
+    params:
+      params.yaml:
+        train_model.seed: 2023
+  visualize:
+    cmd: python ./src/visualization/visualize.py /models/model.joblib /data/processed/
+    deps:
+    - path: ./data/processed/
+      hash: md5
+      md5: aab50a4dee3a7adb53cfbd30ed96d17a.dir
+      size: 11560
+      nfiles: 3
+    - path: ./models/model.joblib
+      hash: md5
+      md5: 76e45d556e37ef3705aacdf98bc7f7e0
+      size: 680
+    - path: ./src/visualization/visualize.py
+      hash: md5
+      md5: b841f419aa97385fffc1dc8f90b8d541
+      size: 2412
+    outs:
+    - path: dvclive
+      hash: md5
+      md5: ee21e478def11b8a7d01d45649885265.dir
+      size: 133
+      nfiles: 1

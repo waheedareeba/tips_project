@@ -1,0 +1,36 @@
+stages:
+  build_features:
+    cmd: python ./src/features/build_features.py /data/raw/tips.csv
+    deps:
+    - ./src/features/build_features.py 
+    - ./data/raw/tips.csv
+
+
+  make_dataset:                           
+    cmd: python ./src/data/make_dataset.py /data/interim/tips2.csv
+    deps:
+    - ./data/interim/
+    - ./src/data/make_dataset.py
+    params:
+    - make_dataset.test_split
+    - make_dataset.seed
+   
+  train_model:
+    cmd: python ./src/models/train_model.py /data/processed/ 
+    deps:
+    - ./data/processed/
+    - ./src/models/train_model.py
+    params:
+    - train_model.seed
+  
+  visualize:
+    cmd: python ./src/visualization/visualize.py /models/model.joblib /data/processed/
+    deps:
+    - ./data/processed/
+    - ./models/model.joblib
+    - ./src/visualization/visualize.py
+    outs:
+    - dvclive
+
+metrics:
+- dvclive/metrics.json
